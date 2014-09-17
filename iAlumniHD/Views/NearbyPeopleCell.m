@@ -1,0 +1,300 @@
+//
+//  NearbyPeopleCell.m
+//  iAlumniHD
+//
+//  Created by MobGuang on 12-7-31.
+//
+//
+
+#import "NearbyPeopleCell.h"
+#import "WXWGradientButton.h"
+#import "Alumni.h"
+#import "Member.h"
+
+#define CELL_CONTENT_MARGIN         5.0f
+#define FONT_SIZE                   14.0f
+#define TOP_OFFSET                  5.0f
+#define COMMENT_IND_PORTRAIT_X      265.0f
+#define COMMENT_IND_WIDTH           20.0f
+#define LOC_IND_PORTRAIT_X          282.0f
+#define LOC_IND_WIDTH               10.0f
+#define IMG_IND_PORTRAIT_X          298.0f
+#define IMG_IND_HEIGHT              15.0f
+#define IND_WIDTH                   15.0f
+#define IND_HEIGHT                  10.0f
+#define TIMELINE_PORTRAIT_X         235.0f
+
+#define COMMENT_SUM_LABEL_WIDTH     60.0f
+
+#define NEW_COMMENT_IND_WIDTH       40.0f//30.0f
+#define NEW_COMMENT_IND_HEIGHT      40.0f//16.0f
+
+#define OPEN_IMG_BTN_WIDTH          80.0f
+#define OPEN_IMG_BTN_HEIGHT         20.0f
+#define OPEN_IMG_BTN_X              PHOTO_SIDE_LEN + CELL_CONTENT_MARGIN * 2
+#define OPEN_IMG_BTN_Y              CELL_CONTENT_MARGIN
+
+#define PHOTO_MARGIN                3.0f
+
+#define CONTENT_X                   CELL_CONTENT_MARGIN * 2 + PHOTO_WIDTH + PHOTO_MARGIN * 2
+
+#define CONTENT_W                   LIST_WIDTH - CONTENT_X - 9.0f
+#define NAME_W                      144.0f
+#define CLASS_W                     CONTENT_W - NAME_W
+#define SHAKE_PLACE_W               150.0f
+#define SHAKE_THING_W               CONTENT_W - SHAKE_PLACE_W
+
+#define PHOTO_WIDTH                   56.0f
+#define PHOTO_HEIGHT                  60.0f
+
+enum {
+    iconTag = 0,
+    companyTag,
+    memberTag,
+    classTag,
+};
+
+@interface NearbyPeopleCell()
+@property (nonatomic, retain) Alumni *alumni;
+@end
+
+@implementation NearbyPeopleCell
+
+@synthesize _url;
+@synthesize editorImageShadowView;
+@synthesize companyLabel;
+@synthesize nameLabel;
+@synthesize classLabel;
+@synthesize alumni = _alumni;
+
+- (void)initView{
+    
+    // set editor image view
+    _imageBackgroundView = [[[UIView alloc] initWithFrame:CGRectMake(CELL_CONTENT_MARGIN,
+                                                                     CELL_CONTENT_MARGIN,
+                                                                     PHOTO_WIDTH + PHOTO_MARGIN * 2,
+                                                                     PHOTO_HEIGHT + PHOTO_MARGIN * 2)] autorelease];
+    
+    _imageBackgroundView.backgroundColor = [UIColor whiteColor];
+    UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(1, 1,
+                                                                           _imageBackgroundView.frame.size.width - 2,
+                                                                           _imageBackgroundView.frame.size.height - 1)];
+    
+    _imageBackgroundView.layer.shadowPath = shadowPath.CGPath;
+    _imageBackgroundView.layer.shadowColor = [UIColor darkGrayColor].CGColor;
+    _imageBackgroundView.layer.shadowOpacity = 0.9f;
+    _imageBackgroundView.layer.shadowRadius = 1.0f;
+    _imageBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
+    _imageBackgroundView.layer.masksToBounds = NO;
+    [self.contentView addSubview:_imageBackgroundView];
+    
+    _photoImageView = [[[UIImageView alloc] initWithFrame:CGRectMake(PHOTO_MARGIN,
+                                                                     PHOTO_MARGIN,
+                                                                     PHOTO_WIDTH,
+                                                                     PHOTO_HEIGHT)] autorelease];
+    
+    _photoImageView.backgroundColor = [UIColor whiteColor];
+    [_imageBackgroundView addSubview:_photoImageView];
+    
+    // set name Label
+    nameLabel = [self initLabel:CGRectZero
+                      textColor:[UIColor blackColor]
+                    shadowColor:[UIColor whiteColor]];
+    nameLabel.tag = memberTag;
+    nameLabel.font = Arial_FONT(FONT_SIZE);
+    nameLabel.lineBreakMode = UILineBreakModeTailTruncation;
+    [self.contentView addSubview:nameLabel];
+    
+    // set classLabel
+    classLabel = [self initLabel:CGRectZero
+                       textColor:[UIColor darkGrayColor]
+                     shadowColor:[UIColor whiteColor]];
+    classLabel.tag = classTag;
+    [classLabel setFont:FONT(FONT_SIZE-1)];
+    classLabel.backgroundColor = TRANSPARENT_COLOR;
+    [self.contentView addSubview:classLabel];
+    
+    // set company Label
+    companyLabel = [self initLabel:CGRectZero
+                         textColor:BASE_INFO_COLOR
+                       shadowColor:[UIColor whiteColor]];
+    companyLabel.tag = companyTag;
+    companyLabel.font = FONT(FONT_SIZE-1);
+    companyLabel.numberOfLines = 0;
+    [self.contentView addSubview:companyLabel];
+    
+    // chat
+    chatImgView = [[UIImageView alloc] init];
+    chatImgView.frame = CGRectMake(CELL_CONTENT_PORTRAIT_WIDTH, 25.f, 25.f, 19.f);
+    chatImgView.contentMode = UIViewContentModeScaleAspectFill;
+    chatImgView.backgroundColor = COLOR(234, 234, 234);
+    chatImgView.tag = iconTag;
+    chatImgView.layer.cornerRadius = 6.0f;
+    chatImgView.layer.masksToBounds = YES;
+    chatImgView.backgroundColor = TRANSPARENT_COLOR;
+    chatImgView.userInteractionEnabled = YES;
+    chatImgView.image = [UIImage imageNamed:@"chat.png"];
+    [self.contentView addSubview:chatImgView];
+    
+    _chatImgBut = [UIButton buttonWithType:UIButtonTypeCustom];
+    _chatImgBut.frame = CGRectMake(CELL_CONTENT_PORTRAIT_WIDTH-20.f, 25.f-10.f, 25.f+40.f, 19.f+20.f);
+    _chatImgBut.layer.cornerRadius = 6.0f;
+    _chatImgBut.layer.masksToBounds = YES;
+    [_chatImgBut addTarget:self action:@selector(openChat:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_chatImgBut];
+    
+    
+    self.contentView.backgroundColor = CELL_COLOR;
+    self.selectedBackgroundView.backgroundColor = [UIColor blueColor];
+}
+
+- (id)initWithStyle:(UITableViewCellStyle)style
+    reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self initView];
+    }
+    return self;
+}
+
+- (id)initWithStyle:(UITableViewCellStyle)style
+    reuseIdentifier:(NSString *)reuseIdentifier
+imageDisplayerDelegate:(id<ImageDisplayerDelegate>)imageDisplayerDelegate
+imageClickableDelegate:(id<ECClickableElementDelegate>)imageClickableDelegate
+                MOC:(NSManagedObjectContext *)MOC {
+    self = [super initWithStyle:style
+                reuseIdentifier:reuseIdentifier
+         imageDisplayerDelegate:imageDisplayerDelegate
+                            MOC:MOC];
+    if (self) {
+        _delegate = imageClickableDelegate;
+		[self initView];
+    }
+	
+    return self;
+}
+
+- (void)dealloc {
+    RELEASE_OBJ(nameLabel);
+    RELEASE_OBJ(classLabel);
+	RELEASE_OBJ(companyLabel);
+    
+    RELEASE_OBJ(chatImgView);
+    
+    self.alumni = nil;
+    
+    [super dealloc];
+}
+
+#pragma mark - overwrite methods
+- (void)openImg:(id)sender {
+}
+
+- (void)openProfile:(id)sender {
+    if (_delegate) {
+        //[_delegate openProfile:self.alumni.personId userType:self.alumni.userType];
+    }
+}
+
+- (void)openChat:(id)sender {
+    if (_delegate) {
+        [_delegate doChat:self.alumni sender:sender];
+    }
+}
+
+- (void)drawAvatar:(NSString *)imageUrl {
+    if (imageUrl && imageUrl.length > 0 ) {
+        NSMutableArray *urls = [NSMutableArray array];
+        [urls addObject:imageUrl];
+        [self fetchImage:urls forceNew:NO];
+    }
+}
+
+#pragma mark - customize methods
+- (void)drawCell:(Alumni*)alumni
+{
+    self.alumni = alumni;
+    
+    NSString *memberName = alumni.name;
+    NSString *className = alumni.classGroupName;
+    NSString *companyName = alumni.companyName;
+    
+    CGSize constraint;
+    
+    // show avatar
+    [self drawAvatar:alumni.imageUrl];
+    
+    // Name
+    constraint = CGSizeMake(NAME_W, 20);
+    
+	CGSize nameSize = [memberName sizeWithFont:Arial_FONT(FONT_SIZE)
+                             constrainedToSize:constraint
+                                 lineBreakMode:UILineBreakModeTailTruncation];
+    
+    nameLabel.frame = CGRectMake(CONTENT_X, TOP_OFFSET, constraint.width, nameSize.height);
+	nameLabel.text = memberName;
+    
+    // Class
+    constraint = CGSizeMake(CLASS_W, 20);
+    
+    if (![@"" isEqualToString:className]) {
+        classLabel.text = [NSString stringWithFormat:@" | %@", className];
+    }
+    CGSize classNameSize = [classLabel.text sizeWithFont:FONT(FONT_SIZE-1)
+                                       constrainedToSize:constraint
+                                           lineBreakMode:UILineBreakModeTailTruncation];
+    
+    classLabel.frame = CGRectMake(CONTENT_X+nameSize.width, TOP_OFFSET+1, CLASS_W, classNameSize.height);
+    
+    // Company
+    companyLabel.text = companyName;
+    CGSize companyNameSize = [companyLabel.text sizeWithFont:companyLabel.font
+                                           constrainedToSize:CGSizeMake(chatImgView.frame.origin.x - MARGIN - (_imageBackgroundView.frame.origin.x + _imageBackgroundView.frame.size.width + MARGIN * 2), CGFLOAT_MAX)
+                                               lineBreakMode:UILineBreakModeWordWrap];
+    
+    companyLabel.frame = CGRectMake(CONTENT_X,
+                                    nameLabel.frame.origin.y + nameLabel.frame.size.height + MARGIN,
+                                    CELL_CONTENT_PORTRAIT_WIDTH - (CONTENT_X), companyNameSize.height);
+    
+    if ([[AppManager instance].personId isEqualToString:alumni.personId]) {
+        chatImgView.hidden = YES;
+        _chatImgBut.hidden = YES;
+        _chatImgBut.enabled = NO;
+    } else {
+        chatImgView.hidden = NO;
+        _chatImgBut.hidden = NO;
+        _chatImgBut.enabled = YES;
+    }
+    
+    [self setCellStyle:PEOPLE_CELL_HEIGHT];
+}
+
+#pragma mark - ImageFetcherDelegate methods
+- (void)imageFetchStarted:(NSString *)url {
+    if ([self currentUrlMatchCell:url]) {
+        _photoImageView.image = nil;
+    }
+}
+
+- (void)imageFetchDone:(UIImage *)image url:(NSString *)url {
+    if ([self currentUrlMatchCell:url]) {
+        
+        CATransition *imageFadein = [CATransition animation];
+        imageFadein.duration = FADE_IN_DURATION;
+        imageFadein.type = kCATransitionFade;
+        [_photoImageView.layer addAnimation:imageFadein forKey:nil];
+        
+        _photoImageView.image = [CommonUtils cutPartImage:image width:PHOTO_WIDTH height:PHOTO_HEIGHT];
+    }
+}
+
+- (void)imageFetchFromeCacheDone:(UIImage *)image url:(NSString *)url {
+    _photoImageView.image = [CommonUtils cutPartImage:image width:PHOTO_WIDTH height:PHOTO_HEIGHT];
+}
+
+- (void)imageFetchFailed:(NSError *)error url:(NSString *)url {
+    
+}
+
+
+@end
