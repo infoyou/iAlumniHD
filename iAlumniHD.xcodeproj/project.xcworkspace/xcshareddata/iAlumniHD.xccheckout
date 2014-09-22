@@ -5,47 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>DCCD85DE-CED7-4E38-9E85-C72FAFA1A485</string>
+	<string>16C17395-F03A-4B07-9040-66E9F9B30F0C</string>
 	<key>IDESourceControlProjectName</key>
 	<string>iAlumniHD</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>367DA87D-033E-476B-A798-9B3CA1AAC89E</key>
-		<string>https://192.168.0.110/svn/IOS_GoHigh/branches/GoHigh</string>
+		<key>D5A52E7C-8B5D-4162-8AA9-0FBF673D9016</key>
+		<string>https://github.com/infoyou/iAlumniHD.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>iAlumniHD/iAlumniHD.xcodeproj/project.xcworkspace</string>
+	<string>iAlumniHD.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>367DA87D-033E-476B-A798-9B3CA1AAC89E</key>
-		<string>../../..</string>
-	</dict>
-	<key>IDESourceControlProjectRepositoryRootDictionary</key>
-	<dict>
-		<key>367DA87D-033E-476B-A798-9B3CA1AAC89E</key>
-		<string>https://192.168.0.110/svn/IOS_GoHigh</string>
+		<key>D5A52E7C-8B5D-4162-8AA9-0FBF673D9016</key>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://192.168.0.110/svn/IOS_GoHigh/branches/GoHigh/iAlumniHD/iAlumniHD.xcodeproj</string>
+	<string>https://github.com/infoyou/iAlumniHD.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>367DA87D-033E-476B-A798-9B3CA1AAC89E</string>
+	<string>D5A52E7C-8B5D-4162-8AA9-0FBF673D9016</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
-			<key>IDESourceControlRepositoryBranchesRelativeLocationKey</key>
-			<string>branches</string>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
-			<key>IDESourceControlRepositoryTagsRelativeLocationKey</key>
-			<string>tags</string>
-			<key>IDESourceControlRepositoryTrunkRelativeLocationKey</key>
-			<string>trunk</string>
+			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>367DA87D-033E-476B-A798-9B3CA1AAC89E</string>
+			<string>D5A52E7C-8B5D-4162-8AA9-0FBF673D9016</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Project</string>
+			<string>iAlumniHD</string>
 		</dict>
 	</array>
 </dict>
